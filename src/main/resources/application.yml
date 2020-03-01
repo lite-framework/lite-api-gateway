@@ -1,0 +1,42 @@
+server:
+  port: 9859
+spring:
+  application:
+    name: lite-api-gateway
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+      routes:
+        - id: common-merchant-service
+          uri: lb://common-merchant-service
+          predicates:
+            - Path=/common-merchant/**
+        - id: common-product-service
+          uri: lb://common-product-service
+          predicates:
+            - Path=/common-product/**
+        - id: pp-crawler-service
+          uri: lb://pp-crawler-service
+          predicates:
+            - Path=/pp-crawler/**
+
+
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    enabled: true
+    service-url:
+      defaultZone: http://eureka1-host:8761/eureka/
+
+logging:
+  level:
+    org.springframework.cloud.gateway: debug
+  config: classpath:logback.xml
+
